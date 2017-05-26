@@ -15,6 +15,7 @@ bl_info = {
 # Our operator class should be derived from bpy.types.Operator
 
 import bpy
+import mathutils
 from bpy.props import FloatProperty # this is float property type
 from bpy.props import FloatVectorProperty
 from bpy.props import EnumProperty
@@ -57,7 +58,7 @@ class CircleObjects(bpy.types.Operator):
         default='Z'
     )
     
-    cardinals = { 'X' : Vector((1,0,0)), 'Y' : Vector((0,1,0)), 'Z' : Vector((0,0,1)) }
+    cardinals = { 'X' : mathutils.Vector((1,0,0)), 'Y' : mathutils.Vector((0,1,0)), 'Z' : mathutils.Vector((0,0,1)) }
     
     # the poll method decides when to enable and disable operator
     # When more than 2 objetcs are selected and mode is object then only circle objetcs operator is enables otherwise it is disabled.
@@ -69,7 +70,7 @@ class CircleObjects(bpy.types.Operator):
     def execute(self, context):
         xyz = [ob.location for ob in context.selected_objects]
         
-        center = sum(xyz, Vector()) / len(xyz)
+        center = sum(xyz, mathutils.Vector()) / len(xyz)
         
         radius = sum((loc.xy - center.xy).length for loc in xyz)
         
@@ -89,28 +90,28 @@ class CircleObjects(bpy.types.Operator):
         
         return {'FINISHED'}
     
-    def dar(self, context):
-		layout = self.layout
-		layout.prop(self, 'scale')
-		layout.prop(self, 'orientation')
-		if self.orientation == 'A':
-			layout.prop(self, 'axis', text="")
+    def draw(self, context):
+        layout = self.layout
+        layout.prop(self, 'scale')
+        layout.prop(self, 'orientation')
+        if self.orientation == 'A':
+            layout.prop(self, 'axis', text="")
         
-    # To use in Belnder we need to register operator - register function
-    def register():
-        bpy.utils.register_module(__name__) # register any class in a module that has REGISTER entry in bl_options
-        
-        bpy.types.VIEW3D_MT_object.append(menu_func) # This will create a Object menu in 3D View entry based on the function passed
-        
-    # To handle uninstalling an operator - unregister function
-    def unregister():
-        bpy.utils.unregister_module(__name__) # unregisters
-        
-        bpy.types.VIEW3D_MT_object.remove(menu_func) # removes menu entry
-        
-    def menu_func(self, context):
-        self.layout.operator(CircleObjects.bl_idname, icon='PLUGIN')
+# To use in Belnder we need to register operator - register function
+def register():
+    bpy.utils.register_module(__name__) # register any class in a module that has REGISTER entry in bl_options
     
+    bpy.types.VIEW3D_MT_object.append(menu_func) # This will create a Object menu in 3D View entry based on the function passed
     
+# To handle uninstalling an operator - unregister function
+def unregister():
+    bpy.utils.unregister_module(__name__) # unregisters
     
+    bpy.types.VIEW3D_MT_object.remove(menu_func) # removes menu entry
     
+def menu_func(self, context):
+    self.layout.operator(CircleObjects.bl_idname, icon='PLUGIN')
+
+
+
+

@@ -5,7 +5,7 @@ bl_info = {
     "version" : (0, 0, 1),
     "blender" : (2, 76, 0),
     "location" : "View3D > Object > Move",
-    "dscription" : "Moves an object",
+    "description" : "Moves an object",
     "warning" : "",
     "wiki_url" : "",
     "tracker_url" : "",
@@ -33,18 +33,18 @@ class MoveObject(bpy.types.Operator):
         context.active_object.location.x += 1
         return {'FINISHED'}
     
-    # To use in Belnder we need to register operator - register function
-    def register():
-        bpy.utils.register_module(__name__) # register any class in a module that has REGISTER entry in bl_options
-        
-        bpy.types.VIEW3D_MT_object.append(menu_func) # This will create a Object menu in 3D View entry based on the function passed
-        
-    # To handle uninstalling an operator - unregister function
-    def unregister():
-        bpy.utils.unregister_module(__name__) # unregisters
-        
-        bpy.types.VIEW3D_MT_object.remove(menu_func) # removes menu entry
-        
-    def menu_func(self, context):
-        self.layout.operator(MoveObject.bl_idname, icon="MESH_CUBE") # Links entry to menu to our operator using bl_idname and display Icon provided along with name from bl_label
-        
+# To use in Belnder we need to register operator - register function
+def register():
+    bpy.utils.register_module(__name__) # register any class in a module that has REGISTER entry in bl_options
+    
+    bpy.types.VIEW3D_MT_object.append(menu_func) # This will create a Object menu in 3D View entry based on the function passed
+    
+# To handle uninstalling an operator - unregister function
+def unregister():
+    bpy.utils.unregister_module(__name__) # unregisters
+    
+    bpy.types.VIEW3D_MT_object.remove(menu_func) # removes menu entry
+    
+def menu_func(self, context):
+    self.layout.operator(MoveObject.bl_idname, icon="MESH_CUBE") # Links entry to menu to our operator using bl_idname and display Icon provided along with name from bl_label
+    
